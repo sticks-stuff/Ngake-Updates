@@ -1,0 +1,28 @@
+{
+  "name": "ngake-updates",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "Daily posting of Ngake, my friends cat npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thestickman391/Ngake-Updates.git"
+  },
+  "keywords": [
+    "cat"
+  ],
+  "author": "Thestickman391",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/Thestickman391/Ngake-Updates/issues"
+  },
+  "homepage": "https://github.com/Thestickman391/Ngake-Updates#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "nodemailer": "^6.4.16",
+    "serve": "^11.3.2"
+  }
+}
