@@ -24,23 +24,26 @@ var mailOptions = {
   // }
 // }); 
 
-// const notifier = require('mail-notifier');
+const notifier = require('mail-notifier');
 
-// const imap = {
-  // user: process.env.EMAIL,
-  // password: process.env.PWORD,
-  // host: 'imap.gmail.com',
-  // port: 993,
-  // tls: true,
-  // tlsOptions : {
-	// rejectUnauthorized: false
-  // }
-// };
+const imapNotif = {
+  user: process.env.EMAIL,
+  password: process.env.PWORD,
+  host: 'imap.gmail.com',
+  port: 993,
+  tls: true,
+  tlsOptions : {
+	rejectUnauthorized: false
+  }
+};
 
-// const n = notifier(imap);
-// n.on('end', () => n.start()) // session closed
-  // .on('mail', mail => console.log(mail.from[0].address, mail.subject))
-  // .start();
+const n = notifier(imapNotif);
+n.on('end', () => n.start()) // session closed
+n.on('mail', function(mail){
+	imap.connect(); 
+	console.log(mail.subject);
+});
+n.start();
   
 var inspect = require('util').inspect;
 var fs      = require('fs');
@@ -73,7 +76,8 @@ function findAttachmentParts(struct, attachments) {
 }
 
 function buildAttMessageFunction(attachment) {
-  var filename = "photos/" + attachment.params.name;
+  var re = /(?:\.([^.]+))?$/;
+  var filename = "photos/" + Math.floor(new Date().getTime() / 1000) + "." + re.exec(attachment.params.name)[1];
   var encoding = attachment.encoding;
 
   return function (msg, seqno) {
@@ -105,10 +109,10 @@ function buildAttMessageFunction(attachment) {
 imap.once('ready', function() {
   imap.openBox('INBOX', true, function(err, box) {
     if (err) throw err;
-    var f = imap.seq.fetch('1:99', {
-      bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
-      struct: true
-    });
+	var f = imap.seq.fetch(box.messages.total + ':*', { 
+		bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
+		struct: true
+	});
     f.on('message', function (msg, seqno) {
       console.log('Message #%d', seqno);
       var prefix = '(#' + seqno + ') ';
@@ -170,5 +174,3 @@ imap.once('error', function(err) {
 imap.once('end', function() {
   console.log('Connection ended');
 });
-
-imap.connect();
