@@ -1,5 +1,6 @@
 require('dotenv').config();
 var nodemailer = require('nodemailer');
+var imgur = require('imgur');
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -37,140 +38,55 @@ const imapNotif = {
   }
 };
 
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const creds = require('./ngake-updates-93c8802d8d88.json'); // the file saved above
+
+
+// spreadsheet key is the long id in the sheets URL
+const doc = new GoogleSpreadsheet('1hc6l9UsYI1rfutEgkqSQRCGUZbkPw_A1lf8YJBvty8o');
+(async function() {
+await doc.useServiceAccountAuth(creds);
+
+await doc.loadInfo(); // loads document properties and worksheets
+console.log(doc.title);
+ 
+const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+console.log(sheet.title);
+console.log(sheet.rowCount);
+}());
+
 const n = notifier(imapNotif);
 n.on('end', () => n.start()) // session closed
 n.on('mail', function(mail){
-	imap.connect(); 
-	console.log(mail.subject);
+	// console.log(mail.subject);
+	// console.log(mail);
+	// console.log(mail.attachments);
+	//console.log(mail.attachments.content);
+	
+	//console.log(typeof(mail.date));
+	
+	console.log("New Mail! " + mail.subject);
+	console.log("From " + mail.from[0].address);
+	if(mail.attachments !== undefined)
+	{
+		let bufferOriginal = Buffer.from(mail.attachments[0].content);
+		console.log("Uploading to imgur...");
+		imgur.uploadBase64(bufferOriginal.toString('base64'))
+		.then(function (json) {
+			console.log("Uploaded! URL is " + json.data.link);
+			var timestamp = parseInt(new Date(mail.date).getTime());
+			console.log("Timestamp is " + timestamp);
+			(async function() {
+				const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+				await sheet.addRow({ Timestamp: timestamp, Caption: mail.subject, URL: json.data.link });
+			}());
+		})
+		.catch(function (err) {
+			console.log("Error uploading to imgur!");
+			console.error(err.message);
+		});
+	} else {
+		console.log("No attachments in message! Ignoring");
+	}
 });
 n.start();
-  
-var inspect = require('util').inspect;
-var fs      = require('fs');
-const { Base64Decode } = require('base64-stream')
-var Imap    = require('imap');
-var imap    = new Imap({
-  user: process.env.EMAIL,
-  password: process.env.PWORD,
-  host: 'imap.gmail.com',
-  port: 993,
-  tls: true,
-  tlsOptions : {
-	rejectUnauthorized: false
-  }
-  //,debug: function(msg){console.log('imap:', msg);}
-});
-
-function findAttachmentParts(struct, attachments) {
-  attachments = attachments ||  [];
-  for (var i = 0, len = struct.length, r; i < len; ++i) {
-    if (Array.isArray(struct[i])) {
-      findAttachmentParts(struct[i], attachments);
-    } else {
-      if (struct[i].disposition && ['INLINE', 'ATTACHMENT'].indexOf(struct[i].disposition.type) > -1) {
-        attachments.push(struct[i]);
-      }
-    }
-  }
-  return attachments;
-}
-
-function buildAttMessageFunction(attachment) {
-  var re = /(?:\.([^.]+))?$/;
-  var filename = "photos/" + Math.floor(new Date().getTime() / 1000) + "." + re.exec(attachment.params.name)[1];
-  var encoding = attachment.encoding;
-
-  return function (msg, seqno) {
-    var prefix = '(#' + seqno + ') ';
-    msg.on('body', function(stream, info) {
-      //Create a write stream so that we can stream the attachment to file;
-      console.log(prefix + 'Streaming this attachment to file', filename, info);
-      var writeStream = fs.createWriteStream(filename);
-      writeStream.on('finish', function() {
-        console.log(prefix + 'Done writing to file %s', filename);
-      });
-
-      //stream.pipe(writeStream); this would write base64 data to the file.
-      //so we decode during streaming using 
-      if (encoding === 'BASE64') {
-        //the stream is base64 encoded, so here the stream is decode on the fly and piped to the write stream (file)
-         stream.pipe(new Base64Decode()).pipe(writeStream)
-      } else  {
-        //here we have none or some other decoding streamed directly to the file which renders it useless probably
-        stream.pipe(writeStream);
-      }
-    });
-    msg.once('end', function() {
-      console.log(prefix + 'Finished attachment %s', filename);
-    });
-  };
-}
-
-imap.once('ready', function() {
-  imap.openBox('INBOX', true, function(err, box) {
-    if (err) throw err;
-	var f = imap.seq.fetch(box.messages.total + ':*', { 
-		bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
-		struct: true
-	});
-    f.on('message', function (msg, seqno) {
-      console.log('Message #%d', seqno);
-      var prefix = '(#' + seqno + ') ';
-      msg.on('body', function(stream, info) {
-        var buffer = '';
-        stream.on('data', function(chunk) {
-          buffer += chunk.toString('utf8');
-        });
-        stream.once('end', function() {
-          console.log(prefix + 'Parsed header: %s', Imap.parseHeader(buffer));
-        });
-      });
-      msg.once('attributes', function(attrs) {
-        var attachments = findAttachmentParts(attrs.struct);
-        console.log(prefix + 'Has attachments: %d', attachments.length);
-        for (var i = 0, len=attachments.length ; i < len; ++i) {
-          var attachment = attachments[i];
-          /*This is how each attachment looks like {
-              partID: '2',
-              type: 'application',
-              subtype: 'octet-stream',
-              params: { name: 'file-name.ext' },
-              id: null,
-              description: null,
-              encoding: 'BASE64',
-              size: 44952,
-              md5: null,
-              disposition: { type: 'ATTACHMENT', params: { filename: 'file-name.ext' } },
-              language: null
-            }
-          */
-          console.log(prefix + 'Fetching attachment %s', attachment.params.name);
-          var f = imap.fetch(attrs.uid , {
-            bodies: [attachment.partID],
-            struct: true
-          });
-          //build function to process attachment message
-          f.on('message', buildAttMessageFunction(attachment));
-        }
-      });
-      msg.once('end', function() {
-        console.log(prefix + 'Finished email');
-      });
-    });
-    f.once('error', function(err) {
-      console.log('Fetch error: ' + err);
-    });
-    f.once('end', function() {
-      console.log('Done fetching all messages!');
-      imap.end();
-    });
-  });
-});
-
-imap.once('error', function(err) {
-  console.log(err);
-});
-
-imap.once('end', function() {
-  console.log('Connection ended');
-});
