@@ -114,3 +114,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/ngake-updates-93c8802d8d88.json

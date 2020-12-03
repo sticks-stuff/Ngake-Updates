@@ -23,6 +23,7 @@
   "dependencies": {
     "base64-stream": "^1.0.0",
     "dotenv": "^8.2.0",
+    "google-spreadsheet": "^3.0.14",
     "imap": "^0.8.19",
     "inbox": "^1.1.59",
     "mail-notifier": "^0.5.0",
