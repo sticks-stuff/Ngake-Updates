@@ -78,7 +78,12 @@ n.on('mail', function(mail){
 			console.log("Timestamp is " + timestamp);
 			(async function() {
 				const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-				await sheet.addRow({ Timestamp: timestamp, Caption: mail.subject, URL: json.data.link });
+				if(mail.subject == '')
+				{
+					await sheet.addRow({ Timestamp: timestamp, Caption: "(no caption)", URL: json.data.link });
+				} else {
+					await sheet.addRow({ Timestamp: timestamp, Caption: mail.subject, URL: json.data.link });
+				}
 			}());
 		})
 		.catch(function (err) {

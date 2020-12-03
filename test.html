@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css" media="print">
+  form {display: none;}
+</style>
+</head>
+<body>
+<h1>Parse Google Spreadsheet with JavaScript</h1> 
+<img id="image"></img>
+<div id="caption"></div>
+<button onclick="leftArrow()" id="leftArrow">
+	<img src="https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-left-arrow-icon-png-image_925725.jpg">
+<button>
+<button onclick="rightArrow()" id="rightArrow">
+	<img src="https://www.clker.com/cliparts/i/J/y/g/H/f/red-right-arrow-md.png">
+<button>
+<script type="text/javascript">
+// The callback function the JSONP request will execute to load data from API
+var numberOfScroll = parseInt(decodeURIComponent(window.location.hash.slice(1)));
+
+var spreadsheetArraySave = [];
+function doData(data) {
+    // Final results will be stored here	
+    var results = [];
+
+    // Get all entries from spreadsheet
+    var entries = data.feed.entry;
+
+    // Set initial previous row, so we can check if the data in the current cell is from a new row
+    var previousRow = 0;
+
+    // Iterate all entries in the spreadsheet
+    for (var i = 0; i < entries.length; i++) {
+        // check what was the latest row we added to our result array, then load it to local variable
+        var latestRow = results[results.length - 1];
+
+        // get current cell
+        var cell = entries[i];
+
+        // get text from current cell
+        var text = cell.content.$t;
+
+        // get the current row
+        var row = cell.gs$cell.row;
+
+        // Determine if the current cell is in the latestRow or is a new row
+        if (row > previousRow) {
+            // this is a new row, create new array for this row
+            var newRow = [];
+
+            // add the cell text to this new row array  
+            newRow.push(text);
+
+            // store the new row array in the final results array
+            results.push(newRow);
+
+            // Increment the previous row, since we added a new row to the final results array
+            previousRow++;
+        } else {
+            // This cell is in an existing row we already added to the results array, add text to this existing row
+            latestRow.push(text);
+        }
+
+    }
+
+    handleResults(results);
+}
+
+// Do what ever you please with the final array
+function handleResults(spreadsheetArray) {
+    console.log(spreadsheetArray);
+	spreadsheetArraySave = spreadsheetArray;
+	row = numberOfScroll || spreadsheetArraySave.length - 1;
+	console.log(numberOfScroll);
+	if(row <= 1)
+	{
+		document.getElementById("leftArrow").style.display = "none";
+	}
+	if(row >= (spreadsheetArraySave.length - 1))
+	{
+		document.getElementById("rightArrow").style.display = "none";
+	}
+	loadImage(row);
+}
+
+function loadImage(row) {
+	document.getElementById("image").src = spreadsheetArraySave[row][2];
+	document.getElementById("caption").innerHTML = spreadsheetArraySave[row][1];
+}
+
+function rightArrow() {
+	var numberOfScroll = parseInt(decodeURIComponent(window.location.hash.slice(1)));
+	row = numberOfScroll || spreadsheetArraySave.length - 1;
+	row++;
+	window.location.hash = encodeURIComponent(row);
+	loadImage(row);
+	if(row > 1)
+	{
+		document.getElementById("leftArrow").style.display = "block";
+	}
+	if(row >= (spreadsheetArraySave.length - 1))
+	{
+		document.getElementById("rightArrow").style.display = "none";
+	}
+}
+
+function leftArrow() {
+	var numberOfScroll = parseInt(decodeURIComponent(window.location.hash.slice(1)));
+	row = numberOfScroll || spreadsheetArraySave.length - 1;
+	row--;
+	window.location.hash = encodeURIComponent(row);
+	loadImage(row);
+	if(row <= 1)
+	{
+		document.getElementById("leftArrow").style.display = "none";
+	}
+	if(row < (spreadsheetArraySave.length - 1))
+	{
+		document.getElementById("rightArrow").style.display = "block";
+	}
+}
+  </script>   
+<script src="https://spreadsheets.google.com/feeds/cells/1hc6l9UsYI1rfutEgkqSQRCGUZbkPw_A1lf8YJBvty8o/1/public/values?alt=json-in-script&callback=doData"></script>
