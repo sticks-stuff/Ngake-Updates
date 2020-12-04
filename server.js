@@ -61,9 +61,9 @@ n.on('mail', function(mail){
 	// console.log(mail.subject);
 	// console.log(mail);
 	// console.log(mail.attachments);
-	//console.log(mail.attachments.content);
+	// console.log(mail.attachments[0].content);
 	
-	//console.log(typeof(mail.date));
+	// console.log(typeof(mail.date));
 	
 	console.log("New Mail! " + mail.subject);
 	console.log("From " + mail.from[0].address);
@@ -71,6 +71,7 @@ n.on('mail', function(mail){
 	{
 		let bufferOriginal = Buffer.from(mail.attachments[0].content);
 		console.log("Uploading to imgur...");
+		imgur.setAPIUrl('https://api.imgur.com/3/');
 		imgur.uploadBase64(bufferOriginal.toString('base64'))
 		.then(function (json) {
 			console.log("Uploaded! URL is " + json.data.link);
@@ -87,8 +88,27 @@ n.on('mail', function(mail){
 			}());
 		})
 		.catch(function (err) {
-			console.log("Error uploading to imgur!");
-			console.error(err.message);
+			if(err.message === 'File is over the size limit')
+			{
+				//TODO: Compress image before uploading so that the user does not have to compress it themselves
+				console.error(err.message);
+				var mailOptions = {
+				  from: process.env.EMAIL,
+				  to: mail.from[0].address,
+				  subject: 'File over size limit!!',
+				  text: 'The most recent file you\'ve attempted to upload is over the imgur 10MB size limit! Please consider compressing your image and trying again'
+				};
+				transporter.sendMail(mailOptions, function(error, info){
+				  if (error) {
+					console.log(error);
+				  } else {
+					console.log('Email sent: ' + info.response);
+				  }
+				}); 
+			} else {
+				console.log("Error uploading to imgur!");
+				console.error(err.message);
+			}
 		});
 	} else {
 		console.log("No attachments in message! Ignoring");

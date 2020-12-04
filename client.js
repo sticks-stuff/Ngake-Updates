@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<style type="text/css" media="print">
-  form {display: none;}
-</style>
-</head>
-<body>
-<h1>Parse Google Spreadsheet with JavaScript</h1> 
-<img id="image"></img>
-<div id="caption"></div>
-<button onclick="leftArrow()" id="leftArrow">
-	<img src="https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-left-arrow-icon-png-image_925725.jpg">
-<button>
-<button onclick="rightArrow()" id="rightArrow">
-	<img src="https://www.clker.com/cliparts/i/J/y/g/H/f/red-right-arrow-md.png">
-<button>
-<script type="text/javascript">
 // The callback function the JSONP request will execute to load data from API
 var numberOfScroll = parseInt(decodeURIComponent(window.location.hash.slice(1)));
 
@@ -75,18 +57,23 @@ function handleResults(spreadsheetArray) {
 	console.log(numberOfScroll);
 	if(row <= 1)
 	{
-		document.getElementById("leftArrow").style.display = "none";
+		document.getElementById("leftArrow").style.opacity = 0;
+		document.getElementById("leftArrow").style.visibility = "hidden";
 	}
 	if(row >= (spreadsheetArraySave.length - 1))
 	{
-		document.getElementById("rightArrow").style.display = "none";
+		document.getElementById("rightArrow").style.opacity = 0;
+		document.getElementById("rightArrow").style.visibility = "hidden";
 	}
 	loadImage(row);
 }
 
 function loadImage(row) {
 	document.getElementById("image").src = spreadsheetArraySave[row][2];
+	document.getElementById("imageBackground").style.backgroundImage = "url(" + spreadsheetArraySave[row][2] + ")";
 	document.getElementById("caption").innerHTML = spreadsheetArraySave[row][1];
+	document.getElementById("caption").style.top = (Math.floor(Math.random() * (1 + 80 - 20)) + 20) + "%";
+	document.getElementById("caption").style.left = (Math.floor(Math.random() * (1 + 80 - 20)) + 20) + "%";
 }
 
 function rightArrow() {
@@ -97,11 +84,13 @@ function rightArrow() {
 	loadImage(row);
 	if(row > 1)
 	{
-		document.getElementById("leftArrow").style.display = "block";
+		document.getElementById("leftArrow").style.opacity = 100;
+		document.getElementById("leftArrow").style.visibility = "visible";
 	}
 	if(row >= (spreadsheetArraySave.length - 1))
 	{
-		document.getElementById("rightArrow").style.display = "none";
+		document.getElementById("rightArrow").style.opacity = 0;
+		document.getElementById("rightArrow").style.visibility = "hidden";
 	}
 }
 
@@ -113,12 +102,38 @@ function leftArrow() {
 	loadImage(row);
 	if(row <= 1)
 	{
-		document.getElementById("leftArrow").style.display = "none";
+		document.getElementById("leftArrow").style.opacity = 0;
+		document.getElementById("leftArrow").style.visibility = "hidden";
 	}
 	if(row < (spreadsheetArraySave.length - 1))
 	{
-		document.getElementById("rightArrow").style.display = "block";
+		document.getElementById("rightArrow").style.opacity = 100;
+		document.getElementById("rightArrow").style.visibility = "visible";
 	}
 }
-  </script>   
-<script src="https://spreadsheets.google.com/feeds/cells/1hc6l9UsYI1rfutEgkqSQRCGUZbkPw_A1lf8YJBvty8o/1/public/values?alt=json-in-script&callback=doData"></script>
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("about");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="styles.css">
+	<title>Ngake Updates</title>
+	<script src="https://kit.fontawesome.com/cf5e89024c.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&display=swap" rel="stylesheet"> 
+</head>
+<body>
+	<div class="main">
+		<img id="image"></img>
+		<div id="imageBackground"></div>
+		<div id="caption"></div>
+		<button class="arrow left" onclick="leftArrow()" id="leftArrow">
+		  <svg width="120px" height="160px" viewBox="0 0 50 80" xml:space="preserve">
+			<polyline fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="
+			45.63,75.8 0.375,38.087 45.63,0.375 "/>
+		  </svg>  
+		</button>
+		<button class="arrow right" onclick="rightArrow()" id="rightArrow">
+		  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120px" height="160px" viewBox="0 0 50 80" xml:space="preserve">
+			<polyline fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="
+			0.375,0.375 45.63,38.087 0.375,75.8 "/>
+		  </svg>
+		</button>
+		<button id="about">
+			<i class="fas fa-question-circle"></i>
+		</button>
+	</div>
+	
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+
+   <!-- Modal content -->
+	<div class="modal-content">
+	  <div class="modal-header">
+		<span class="close">&times;</span>
+		<h2>About...</h2>
+	  </div>
+	  <div class="modal-body">
+		<p>Daily (?) postings on my friends cat, Ngake.</p>
+		<p>Written using Node.js and a buncha other stuff.</p>
+		<p>You can check out the code <a href="https://github.com/Thestickman391/Ngake-Updates">here</a></p>
+	  </div>
+	</div> 
+
+	</div> 
+	
+	
+	<script src="./client.js"></script>
+	<script src="https://spreadsheets.google.com/feeds/cells/1hc6l9UsYI1rfutEgkqSQRCGUZbkPw_A1lf8YJBvty8o/1/public/values?alt=json-in-script&callback=doData"></script>
+</body>
+</html>

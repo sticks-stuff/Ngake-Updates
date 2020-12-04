@@ -1,0 +1,203 @@
+#imageBackground {
+	object-fit: cover;
+    max-width: 100%;
+    max-height: 100vh;
+    margin: auto;
+    position: absolute;
+    z-index: -1;
+    height: 100vh;
+    width: 100vw;
+    background-position-y: center;
+    background-position-x: center;
+	filter: blur(15px);
+}
+#image {
+	position:relative;
+	max-width: 100%;
+	max-height: 100vh;
+	margin: auto;
+	object-fit: contain;
+	z-index: 1;
+}
+.main {
+	display: flex;
+	height: 100%;
+	align-items: center;
+    justify-content: space-between;
+	flex-wrap: wrap;
+}
+#leftArrow {
+	position:absolute;
+	width: auto;
+	height: auto;
+	margin-left: 5vw;
+	transition: visibility 0.5s, opacity 0.5s linear;
+	visibility: visible;
+	opacity: 100;
+}
+
+#rightArrow {
+	position:absolute;
+	right: 0;
+	width: auto;
+	height: auto;
+	margin-right: 5vw;
+	transition: visibility 0.5s, opacity 0.5s linear;
+	visibility: visible;
+	opacity: 100;
+}
+#caption{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: bold;
+	font-size: 2em;
+	z-index: 2;
+	position: absolute;
+	background-color: #ffffff9e;
+	height: auto;
+	width: auto;
+	padding: 10px;
+}
+
+button {
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  outline:0;
+}
+
+svg {
+  padding: 5px;
+  filter: drop-shadow(2px 2px 0px black) ;
+}
+
+.arrow {
+  z-index: 3;
+  cursor: pointer;
+  position: absolute;
+  width: 70px;
+  height: 90px;
+}
+
+.left:hover polyline,
+.left:focus polyline {
+  stroke-width: 6;
+}
+
+.left:active polyline {
+  stroke-width: 8;
+  transition: all 100ms ease-in-out;
+}
+
+.right:hover polyline,
+.right:focus polyline {
+  stroke-width: 6;
+}
+
+.right:active polyline {
+  stroke-width: 8;
+  transition: all 100ms ease-in-out;
+}
+
+polyline {
+  transition: all 250ms ease-in-out;
+}
+
+#about {
+	z-index: 4;
+	width: 5vw;
+	height: 5vw;
+	position:absolute;
+	right: 0;
+	bottom: 0;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+
+#about > i{
+	font-size: 7em;
+	color: #ffffff82;
+	transition: color 0.175s linear;
+}
+
+#about > i:hover{
+	font-size: 7em;
+	color: #fff;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  top:0;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 50%;
+  height:auto;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2em;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+}
+
+@keyframes animatetop {
+  from {top:-50%; opacity:0}
+  to {top:0%; opacity:1}
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 1em;
+  font-weight: bold;
+  height:auto;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  height:auto;
+}
+
+.modal-header {
+  text-align:center;
+  padding: 50px;
+  font-weight: bold;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2em;
+  background-color: red;
+  color: white;
+  height:auto;
+}
+
+.modal-body {
+	text-align:center;
+	padding: 50px;
+	height:auto;
+	width:auto;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
