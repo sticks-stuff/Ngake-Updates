@@ -1,10 +1,10 @@
 {
   "name": "ngake-updates",
   "version": "1.0.0",
-  "description": "",
+  "description": "Daily posting of Ngake, my friends cat",
   "main": "index.js",
   "scripts": {
-    "test": "Daily posting of Ngake, my friends cat npm test",
+    "test": "npm test",
     "start": "node server.js"
   },
   "repository": {
@@ -21,18 +21,11 @@
   },
   "homepage": "https://github.com/Thestickman391/Ngake-Updates#readme",
   "dependencies": {
-    "base64-stream": "^1.0.0",
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.0.14",
-    "imap": "^0.8.19",
     "imgur": "^0.3.1",
-    "inbox": "^1.1.59",
-    "kraken-free": "^1.0.0",
     "mail-notifier": "^0.5.0",
     "nodemailer": "^6.4.16",
-    "request": "^2.88.2",
-    "serve": "^11.3.2",
-    "smtp-server": "^3.8.0",
-    "superagent": "^6.1.0"
+    "serve": "^11.3.2"
   }
 }
