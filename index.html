@@ -50,6 +50,9 @@
 	
 	
 	<script src="./client.js"></script>
-	<script src="https://spreadsheets.google.com/feeds/cells/1hc6l9UsYI1rfutEgkqSQRCGUZbkPw_A1lf8YJBvty8o/1/public/values?alt=json-in-script&callback=doData"></script>
+	<script async defer src="https://apis.google.com/js/api.js"
+	onload="this.onload=function(){};handleClientLoad()"
+	onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
 </body>
 </html>
