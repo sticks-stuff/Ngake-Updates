@@ -58,9 +58,11 @@ console.log(sheet.rowCount);
 var connect = require('connect');
 var serveStatic = require('serve-static');
 
+port = process.env.PORT || 80
+
 connect()
     .use(serveStatic(__dirname))
-    .listen(80, () => console.log('Server running on 80...'));
+    .listen(port, () => console.log('Server running on ' + port + '...'));
 
 const n = notifier(imapNotif);
 n.on('end', () => n.start()) // session closed
