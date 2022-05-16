@@ -57,6 +57,7 @@
 	width: auto;
 	padding: 10px;
   /* left: 50%; */
+  max-width: 450px;
   top: 0;
   display: flex;
   justify-content: center;
