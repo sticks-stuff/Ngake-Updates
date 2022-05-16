@@ -100,6 +100,7 @@ function handleResults(spreadsheetArray) {
 function loadImage(row) {
 	document.getElementById("image").src = spreadsheetArraySave[row][2];
 	document.getElementById("imageBackground").style.backgroundImage = "url(" + spreadsheetArraySave[row][2] + ")";
+	document.getElementById("timestamp").innerHTML = spreadsheetArraySave[row][0];
 	document.getElementById("caption").innerHTML = spreadsheetArraySave[row][1];
 	document.getElementById("caption").style.top = (Math.floor(Math.random() * (1 + 80 - 20)) + 20) + "%";
 	document.getElementById("caption").style.left = (Math.floor(Math.random() * (1 + 80 - 20)) + 20) + "%";

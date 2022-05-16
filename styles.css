@@ -46,7 +46,7 @@
 	visibility: visible;
 	opacity: 100;
 }
-#caption{
+#caption, #timestamp{
 	font-family: 'Open Sans', sans-serif;
 	font-weight: bold;
 	font-size: 2em;
@@ -56,6 +56,11 @@
 	height: auto;
 	width: auto;
 	padding: 10px;
+  /* left: 50%; */
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button {
