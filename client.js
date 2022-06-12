@@ -56,7 +56,7 @@ window.addEventListener('resize', function(event){
 });
 
 flkty.on( 'settle', function( index ) {
-	window.location.hash = encodeURIComponent(index);
+	window.location.hash = encodeURIComponent(index + 1);
 });
 
 // Do what ever you please with the final array
@@ -89,7 +89,7 @@ function handleResults(spreadsheetArray) {
 		caption.style.left = "calc(max(calc(" + (Math.floor(Math.random() * (1 + 80 - 20)) + 20) + "% - " + (caption.clientWidth / 2) + "px), 0px)"; //have to do this here bc otherwise the div isnt visible and clientHeight and clientWidth returns 0
 	}
 	// loadImage(row);
-	flkty.select( parseInt(decodeURIComponent(window.location.hash.slice(1))), false, true )
+	flkty.select( parseInt(decodeURIComponent(window.location.hash.slice(1))) - 1, false, true )
 }
 
 // Get the modal
